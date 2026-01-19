@@ -1317,7 +1317,7 @@ tr:hover {
     border-radius: 10px 10px 0 0;
 }
 
-.modal-title {
+.modal-title-struk {
     font-size: 20px;
     font-style: 'Montserrat';
     font-weight: 600;
@@ -2097,7 +2097,14 @@ tr:hover {
     .search-filter-container,
     .pagination-container,
     .btn-print .filter-container,
-    .no-print {
+    .no-print,
+    .modal-header,
+    .modal-footer,
+    .close-modal,
+    .main-content,
+    .form-container,
+    .modal-overlay,
+    .logout-modal {
         display: none !important;
     }
 
@@ -2140,23 +2147,13 @@ tr:hover {
     }
 
     .modal,
-    .modal * {
+    .modal *,
+    .modal-transaksi-input,
+    .modal-transaksi-input *  {
         visibility: visible;
     }
 
-    .modal {
-        position: fixed;
-        left: 0;
-        top: 0;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        background-color: white;
-        display: block !important;
-        z-index: 9999;
-    }
-
+    .modal,
     .modal-transaksi-input {
         position: fixed;
         left: 0;
@@ -2170,17 +2167,7 @@ tr:hover {
         z-index: 9999;
     }
 
-    .modal-content {
-        box-shadow: none;
-        border: none;
-        border-radius: 0;
-        max-width: 100%;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
+    .modal-content,
     .modal-content-transaksi-input {
         box-shadow: none;
         border: none;
@@ -2192,12 +2179,6 @@ tr:hover {
         padding: 0;
     }
 
-    .modal-header,
-    .modal-footer,
-    .close-modal {
-        display: none !important;
-    }
-
     .modal-body {
         padding: 20px;
         height: 100%;
@@ -2207,6 +2188,8 @@ tr:hover {
     }
 
     .struk-container {
+        display: block !important;
+        position: relative !important;
         border: 1px solid #000;
         padding: 20px;
         margin: 0;
@@ -2225,15 +2208,6 @@ tr:hover {
         break-inside: avoid;
     }
 
-    /* Sembunyikan elemen lain */
-    .sidebar,
-    .main-content,
-    .header,
-    .form-container {
-        display: none !important;
-    }
-
-    /* Logo Struk */
     .struk-logo {
         border: 2px solid #000;
     }

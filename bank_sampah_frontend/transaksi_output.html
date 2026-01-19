@@ -411,11 +411,20 @@
                 }
                 return;
             }
+
+            let weightObj = {};
                     
             // Check if at least one weight is greater than 0
             const weightInputs = document.querySelectorAll('.weight-input');
             let totalWeight = 0;
-            weightInputs.forEach(input => {
+            weightInputs.forEach((input, index) => {
+                if (input.value > 0) {
+                    weightObj[index] = {
+                        index: index,
+                        berat: parseFloat(input.value) || 0
+                    }   
+                }
+
                 totalWeight += parseFloat(input.value) || 0;
             });
                     
@@ -427,11 +436,13 @@
             // Check if all prices are valid (greater than 0)
             let invalidPrice = false;
             const priceInputs = document.querySelectorAll('.price-input');
-            priceInputs.forEach(input => {
+            priceInputs.forEach((input, index) => {
                 const price = parsePriceInput(input.value);
                 if (price <= 0) {
-                    invalidPrice = true;
-                    input.style.borderColor = 'var(--danger-color)';
+                    if (weightObj.hasOwnProperty(index)) {
+                        invalidPrice = true;
+                        input.style.borderColor = 'var(--danger-color)';
+                    }
                 } else {
                     input.style.borderColor = '';
                 }
