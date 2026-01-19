@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaksi Input - Bank Sampah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-container" id="logo-container">
+            <div class="logo-wrapper">
+                <img src="./img/logo_bank_sampah.jpeg" alt="Logo Bank Sampah" class="logo">
+            </div>
+            <div class="app-title">Bank Sampah</div>
+        </div>
+        
+        <ul class="menu">
+            <li class="menu-section">Transaksi</li>
+            <li><a href="#" class="menu-item active"><i class="fas fa-sign-in-alt"></i> <span>Transaksi Input</span></a></li>
+            <li><a href="transaksi_output.html" class="menu-item"><i class="fas fa-sign-out-alt"></i> <span>Transaksi Output</span></a></li>
+            
+            <li class="menu-section">Kelola Data</li>
+            <li><a href="kelola_akun.html" class="menu-item"><i class="fas fa-users"></i> <span>Kelola Akun</span></a></li>
+            <li><a href="kelola_pengepul.html" class="menu-item"><i class="fas fa-truck"></i> <span>Kelola Pengepul</span></a></li>
+            <li><a href="kelola_jenis_sampah.html" class="menu-item"><i class="fas fa-cog"></i> <span>Kelola Jenis Sampah</span></a></li>
+            
+            <li class="menu-section">Laporan</li>
+            <li class="has-submenu">
+                <a href="#" class="menu-item" id="laporan-menu">
+                    <i class="fas fa-chart-bar"></i> 
+                    <span>Laporan</span>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+                <ul class="submenu" id="laporan-submenu">
+                    <li><a href="laporan_transaksi.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> <span>Laporan Transaksi</span></a></li>
+                    <li><a href="laporan_stok.html" class="menu-item"><i class="fas fa-boxes"></i> <span>Laporan Stok</span></a></li>
+                </ul>
+            </li>
+            
+            <li class="menu-section">Akun</li>
+            <li><a href="#" class="menu-item" id="logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="page-title">Transaksi Input</h1>
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div class="user-text">
+                    <div class="user-greeting" id="user">Hi</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Container -->
+        <div class="form-container">
+            <div class="transaction-header">
+                <div class="transaction-id" id="transactionID">ID Transaksi : -</div>
+                <div class="transaction-date" id="current-date">Tanggal: Loading...</div>
+            </div>
+            
+            <!-- ID Customer Input -->
+            <div class="form-group">
+                <label for="id-customer">ID Customer :</label>
+                <div class="select-container">
+                    <select id="id-customer" class="custom-select">
+                        <option value="">-- Memuat data customer... --</option>
+                    </select>
+                    <div class="select-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Jenis Sampah Section -->
+            <div class="jenis-sampah-section">
+                <div class="jenis-sampah-title">Jenis Sampah</div>
+
+                <div id="dynamic-waste-container">
+                    <p style="text-align: center; padding: 20px;">Memuat data sampah...</p>
+                </div>
+            </div>
+            
+            <!-- Grand Total -->
+            <div class="grand-total">
+                <div class="grand-total-content">
+                    <div class="grand-total-label">Grand Total</div>
+                    <div class="grand-total-value">= Rp <span id="grand-total-value">0</span></div>
+                </div>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="buttons-container">
+                <button type="button" class="btn btn-batal">Batal</button>
+                <button type="button" class="btn btn-simpan">Simpan Transaksi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal/Popup Struk -->
+    <div id="strukModal" class="modal-transaksi-input">
+        <div class="modal-content-transaksi-input">
+            <div class="modal-header">
+                <div class="modal-title">Struk Transaksi</div>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="struk-container">
+                    <div class="struk-header">
+                        <div class="struk-title-container">
+                            <img src="./img/logo_bank_sampah.jpeg" alt="Logo Bank Sampah" class="struk-logo">
+                            <div class="struk-title">BANK SAMPAH</div>
+                        </div>
+                        <div class="struk-date" id="struk-date">20 Oktober 2025</div>
+                    </div>
+                    
+                    <div class="struk-info">
+                        <div class="struk-info-item" id="struk-transaksi-id">ID Transaksi : 10000001</div>
+                        <div class="struk-info-item" id="struk-customer-id">ID Customer: 23TI01 Sopo Jarwo</div>
+                    </div>
+                    
+                    <table class="struk-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Berat</th>
+                                <th>Hrg Satuan</th>
+                                <th>Jumlah</th>
+                            </tr>
+                        </thead>
+                        <tbody id="struk-items">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="struk-total">
+                        <span>Total Transaksi</span>
+                        <span id="struk-total">Rp 31.000</span>
+                    </div>
+                    
+                    <div class="voucher-section">
+                        <div class="voucher-title">Kupon</div>
+                        <div id="voucher-container" class="voucher-container">
+                            <!-- Kupon akan ditambahkan secara dinamis -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cetak" id="btn-cetak-struk">
+                    <i class="fas fa-print"></i> Cetak
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay untuk modal (DI BAWAH MODAL) -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+    
+    <!-- Modal Konfirmasi Logout (DI ATAS OVERLAY) -->
+    <div class="logout-modal" id="logout-modal">
+        <div class="modal-icon">
+            <img src="./img/icon_logout.png" width="100" height="100">
+        </div>
+        <p class="modal-message">Apakah Anda yakin ingin keluar?</p>
+        <div class="modal-buttons">
+            <button class="modal-btn-logout cancel" id="cancel-logout">Tidak</button>
+            <button class="modal-btn-logout confirm" id="confirm-logout">Ya</button>
+        </div>
+    </div>
+
+    <script>
+        const logoContainer = document.getElementById('logo-container');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const laporanMenu = document.getElementById('laporan-menu');
+        const laporanSubmenu = document.getElementById('laporan-submenu');
+        const hasSubmenu = laporanMenu ? laporanMenu.closest('.has-submenu') : null;
+        const logoutContainer = document.getElementById('logout');
+        const logoutModal = document.getElementById('logout-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const cancelLogoutBtn = document.getElementById('cancel-logout');
+        const confirmLogoutBtn = document.getElementById('confirm-logout');
+        const jenisSampahContainer = document.getElementById('dynamic-waste-container');
+        const grandTotalValue = document.getElementById('grand-total-value');
+        const batalBtn = document.querySelector('.btn-batal');
+        const simpanBtn = document.querySelector('.btn-simpan');
+        const strukModal = document.getElementById('strukModal');
+        const closeModalBtn = document.querySelector('.close-modal');
+        const cetakStrukBtn = document.getElementById('btn-cetak-struk');
+            
+        let isLogin = false;
+        let storedLoginData;
+        let dateString;
+        let sampahData = [];
+        let detail = {};
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginData();
+
+            if (isLogin) {
+                // Panggil fungsi updateDateTime saat halaman dimuat
+                updateDateTime();
+
+                fetchMaxTransactionID();
+
+                fetchCustomerList();
+            
+                // Fetch data from server when page loads
+                fetchData();
+                
+                // Setup event listeners
+                setupEventListeners();
+            }
+        });
+
+        function checkLoginData() {
+            // Retrieve the value using the same key 'loginData'
+            storedLoginData = JSON.parse(localStorage.getItem('loginData'));
+
+            if (storedLoginData == null) {
+                window.location.replace('./login.html');
+            } else {
+                isLogin = true;
+                document.getElementById("user").textContent = `Hi, ${storedLoginData.nama}`;
+            }
+        }
+
+        async function fetchMaxTransactionID() {
+            const transactionID = document.getElementById('transactionID');
+                
+            try {
+                // Replace with your actual customer endpoint
+                const response = await fetch('http://localhost:3000/transaksi/maxid');
+                const result = await response.json();
+                    
+                // Handle result.data if your API wraps it, otherwise use result
+                const maxid = result.data + 1;
+
+                transactionID.textContent = `ID Transaksi : ${maxid}`;
+            } catch (error) {
+                console.error('Error loading max id:', error);
+            }
+        }
+
+        async function fetchCustomerList() {
+            const customerSelect = document.getElementById('id-customer');
+            
+            try {
+                // Replace with your actual customer endpoint
+                const response = await fetch('http://localhost:3000/customer');
+                const result = await response.json();
+                    
+                // Handle result.data if your API wraps it, otherwise use result
+                const customers = result.data || result;
+
+                // Clear existing options
+                customerSelect.innerHTML = '<option value="">-- Pilih ID Siswa/Guru --</option>';
+
+                // Loop through the array and create options
+                customers.forEach(customer => {
+                    const option = document.createElement('option');
+                        
+                    // value is what gets sent to the server (the ID)
+                    option.value = customer.customerID || customer.id; 
+                        
+                    // text is what the user sees in the dropdown
+                    option.textContent = `${option.value} - ${customer.nama} (${customer.kategori})`;
+                        
+                    customerSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                customerSelect.innerHTML = '<option value="">Gagal memuat data</option>';
+            }
+        }
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/sampah');
+                console.log('response', response);
+
+                const result = await response.json();
+                console.log('result', result);
+
+                sampahData = result.data || [];
+                console.log('data', sampahData);
+
+                renderTable();
+            } catch (error) {
+                console.error('Error during fetch data:', error);
+                alert('An error occurred. Please try again later.');
+            }
+        }
+
+        function renderTable() {
+            jenisSampahContainer.innerHTML = "";
+
+            sampahData.forEach(item => {
+                const itemHtml = `
+                    <div class="jenis-sampah-item" data-id="${item.jenisSampahID}" data-name="${item.namaJenis}" data-price="${item.hargaPerKg}">
+                        <div class="jenis-sampah-name">
+                            <i class="fas fa-recycle"></i> ${item.namaJenis}
+                        </div>
+                        <table class="input-table">
+                            <tr>
+                                <th>Berat</th>
+                                <td>
+                                    <input type="number" 
+                                        class="weight-input" 
+                                        data-id="${item.jenisSampahID}" 
+                                        min="0" step="0.1" value="0">
+                                <span class="unit-label">Kg</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Harga/kg</th>
+                                <td>
+                                    <span class="unit-label">Rp</span>
+                                    <input type="text" class="currency-input" value="${formatNumber(item.hargaPerKg)}" disabled>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Total</th>
+                                <td>
+                                    <span id="total-display-${item.jenisSampahID}" class="total-display">Rp 0</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                `;
+
+                jenisSampahContainer.insertAdjacentHTML("beforeend", itemHtml);
+            });
+
+            setupCalculationListeners();
+        }
+
+        function setupCalculationListeners() {
+            const inputs = document.querySelectorAll('.weight-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', calculateTotals);
+            });
+        }
+        
+        // Calculate total for each jenis sampah and grand total
+        function calculateTotals() {
+            let grandTotal = 0;
+
+            const allItems = document.querySelectorAll('.jenis-sampah-item');
+
+            allItems.forEach(item => {
+                const id = item.getAttribute('data-id');
+                const price = parseFloat(item.getAttribute('data-price')) || 0;
+                const weightInput = item.querySelector('.weight-input');
+                const weight = parseFloat(weightInput.value) || 0;
+                const name = item.getAttribute("data-name");
+
+                const total = weight * price;
+                    
+                // Update the "Total" display for this specific item
+                const totalDisplay = document.getElementById(`total-display-${id}`);
+                if (totalDisplay) {
+                    totalDisplay.textContent = formatCurrency(total);
+                }
+
+                grandTotal += total;
+
+                let itemDetail = {
+                    jenisSampahID: parseInt(id),
+                    namaJenis: name,
+                    hargaPerKg: price,
+                    berat: weight,
+                    subtotal: total
+                }
+
+                if (!detail.hasOwnProperty(id)) {
+                    detail[id] = {};
+                }
+
+                detail[id] = itemDetail;
+                    
+            });
+
+            grandTotalValue.textContent = formatNumber(grandTotal);
+
+            console.log(detail);
+        }
+
+        function resetForm() {
+            // Reset ID Customer
+            const idCustomerSelect = document.getElementById('id-customer');
+            if (idCustomerSelect) {
+                idCustomerSelect.value = '';
+            }
+
+            const weightInputs = document.querySelectorAll('.weight-input');
+            weightInputs.forEach(input => {
+                input.value = 0;
+            });
+
+            // Recalculate totals
+            calculateTotals();
+
+            fetchMaxTransactionID();
+        }            
+
+        // Fungsi untuk menampilkan modal struk
+        function showStrukModal() {
+            // Ambil data dari form
+            const transactionId = document.querySelector('.transaction-id').textContent.trim();
+            const customerSelect = document.getElementById('id-customer');
+            const customerText = customerSelect.options[customerSelect.selectedIndex].text;
+                
+            // Format tanggal untuk struk
+            const dateObj = new Date();
+            const day = dateObj.getDate();
+            const monthNames = [
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+            const month = monthNames[dateObj.getMonth()];
+            const year = dateObj.getFullYear();
+            const formattedDate = `${day} ${month} ${year}`;
+                
+            // Update data struk
+            document.getElementById('struk-date').textContent = formattedDate;
+            document.getElementById('struk-transaksi-id').textContent = transactionId;
+            document.getElementById('struk-customer-id').textContent = `ID Customer: ${customerText}`;
+                
+            // Hitung ulang item yang ada di form untuk struk
+            const totalTransaksi = updateStrukItems();
+                
+            // Hitung dan tampilkan kupon berdasarkan total transaksi
+            const kuponArray = hitungKupon(totalTransaksi);
+            tampilkanKupon(kuponArray);
+                
+            // Tampilkan modal
+            strukModal.style.display = 'flex';
+        }
+
+        // Fungsi untuk menutup modal
+        function closeStrukModal() {
+            strukModal.style.display = 'none';
+            resetForm();
+        }
+
+        // Fungsi untuk memperbarui item di struk
+        function updateStrukItems() {
+            const strukItemsContainer = document.getElementById('struk-items');
+            strukItemsContainer.innerHTML = '';
+                
+            let totalTransaksi = 0;
+            let hasItems = false;
+
+            const allItems = document.querySelectorAll('.jenis-sampah-item');
+
+            allItems.forEach(item => {
+                // const id = item.getAttribute('data-id');
+                const price = parseFloat(item.getAttribute('data-price')) || 0;
+                const weightInput = item.querySelector('.weight-input');
+                const weight = parseFloat(weightInput.value) || 0;
+                const name = item.getAttribute("data-name");
+
+                if (weight > 0) {
+                    hasItems = true;
+                    const total = weight * price;
+                    totalTransaksi += total;
+                        
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${name}</td>
+                        <td>${weight} kg</td>
+                        <td>Rp ${formatNumber(price)}</td>
+                        <td>Rp ${formatNumber(total)}</td>
+                    `;
+                    strukItemsContainer.appendChild(row);
+                }
+            });
+                
+            // Update total transaksi di struk
+            document.getElementById('struk-total').textContent = `Rp ${formatNumber(totalTransaksi)}`;
+                
+            return totalTransaksi;
+        }
+
+        // Fungsi untuk menghitung kupon berdasarkan total transaksi
+        function hitungKupon(total) {
+            const kupon = [];
+            let sisa = total;
+                
+            // Kupon Rp 20.000
+            const jumlah20000 = Math.floor(sisa / 20000);
+            if (jumlah20000 > 0) {
+                for (let i = 0; i < jumlah20000; i++) {
+                    kupon.push(20000);
+                }
+                sisa = sisa % 20000;
+            }
+                
+            // Kupon Rp 10.000
+            const jumlah10000 = Math.floor(sisa / 10000);
+            if (jumlah10000 > 0) {
+                for (let i = 0; i < jumlah10000; i++) {
+                    kupon.push(10000);
+                }
+                sisa = sisa % 10000;
+            }
+                
+            // Kupon Rp 1.000
+            const jumlah1000 = Math.floor(sisa / 1000);
+            if (jumlah1000 > 0) {
+                for (let i = 0; i < jumlah1000; i++) {
+                    kupon.push(1000);
+                }
+                sisa = sisa % 1000;
+            }
+                
+            return kupon;
+        }
+            
+        // Fungsi untuk menampilkan kupon
+        function tampilkanKupon(kuponArray) {
+            const voucherContainer = document.getElementById('voucher-container');
+            voucherContainer.innerHTML = '';
+                
+            if (kuponArray.length === 0) {
+                const emptyMsg = document.createElement('div');
+                emptyMsg.className = 'voucher-item';
+                emptyMsg.style.gridColumn = '1 / -1';
+                emptyMsg.textContent = 'Tidak ada kupon';
+                voucherContainer.appendChild(emptyMsg);
+                return;
+            }
+                
+            kuponArray.forEach((nilai, index) => {
+                const voucherItem = document.createElement('div');
+                voucherItem.className = 'voucher-item';
+                    
+                const voucherLogo = document.createElement('img');
+                voucherLogo.src = './img/logo_bank_sampah.jpeg';
+                voucherLogo.alt = 'Logo Bank Sampah';
+                voucherLogo.className = 'voucher-logo';
+                    
+                const voucherValue = document.createElement('span');
+                voucherValue.className = 'voucher-value';
+                voucherValue.textContent = `Rp ${formatNumber(nilai)}`;
+                    
+                voucherItem.appendChild(voucherLogo);
+                voucherItem.appendChild(voucherValue);
+                voucherContainer.appendChild(voucherItem);
+            });
+        }
+
+        // Fungsi untuk mencetak struk
+        function cetakStruk() {
+            window.print();
+        }
+
+        async function saveTransaksi() {
+            const idCustomerSelect = document.getElementById('id-customer');
+            const idCustomer = idCustomerSelect ? idCustomerSelect.value.trim() : '';
+            const grandTotalEl = document.getElementById('grand-total-value');
+            const grandTotal = grandTotalEl ? grandTotalEl.textContent : '0';
+                    
+            if (!idCustomer) {
+                alert('Harap pilih ID Customer terlebih dahulu!');
+                if (idCustomerSelect) {
+                    idCustomerSelect.focus();
+                }
+                return;
+            }
+                    
+            if (grandTotal === '0') {
+                alert('Harap masukkan berat sampah terlebih dahulu!');
+                return;
+            }
+                    
+            // Get selected option text
+            const selectedOption = idCustomerSelect.options[idCustomerSelect.selectedIndex];
+            const customerInfo = selectedOption.text;
+
+            let totalHarga = grandTotal.replace(/\./g,"");
+
+            const transactionData = {
+            	adminID: parseInt(storedLoginData.adminID),
+        		customerID: parseInt(idCustomer),
+                pengepulID: null,
+                tanggal: dateString,
+                totalBerat: 0,
+                totalHarga: parseInt(totalHarga),
+                detail: []
+          	};
+
+            // ONLY ADD INTO ARRAY DETAIL IF WEIGHT MORE THAN 0
+            let totalBerat = 0
+                    
+            for (let x in detail) {
+                if (detail[x].berat > 0) {
+                    totalBerat += detail[x].berat;
+                    transactionData.detail.push(detail[x]);
+                }
+            }
+
+            transactionData.totalBerat = totalBerat;
+            console.log(transactionData);
+            
+            try {
+				const response = await fetch('http://localhost:3000/transaksi/input', 
+				{
+					method: 'POST',
+					headers: {
+						'Access-Control-Allow-Headers' : 'Content-Type',
+            			'Access-Control-Allow-Origin': '*',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(transactionData)
+				});
+				console.log('response', response);
+
+				const result = await response.json();
+				console.log('result', result);
+
+				// 200 Success
+				if (response.status == 200) {
+					status = 200;
+                    alert(`Transaksi berhasil disimpan!\nID Customer: ${customerInfo}\nGrand Total: Rp ${grandTotal}`);
+
+                    // Tampilkan modal struk
+                    showStrukModal();
+				} else {
+
+				}
+		  	} catch (error) {
+				console.error('Error during save transaction:', error);
+    			alert('An error occurred. Please try again later.');
+  			}  
+        }
+
+        // Date function - tanggal, bulan, tahun
+        function updateDateTime() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+                
+            // Format: DD/MM/YYYY
+            dateString = `${day}/${month}/${year}`;
+                
+            // Update elemen HTML
+            const dateElement = document.getElementById('current-date');
+            if (dateElement) {
+                dateElement.textContent = `Tanggal: ${dateString}`;
+            }
+        }
+
+        // Fungsi untuk menampilkan modal logout
+        function showLogoutModal() {
+            logoutModal.classList.add('show');
+            modalOverlay.classList.add('show');
+            // Blokir scroll body saat modal terbuka
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fungsi untuk menyembunyikan modal logout
+        function hideLogoutModal() {
+            logoutModal.classList.remove('show');
+            modalOverlay.classList.remove('show');
+            // Kembalikan scroll body
+            document.body.style.overflow = 'auto';
+        }
+
+        // Format currency to Rupiah
+        function formatCurrency(amount) {
+            return 'Rp ' + formatNumber(amount);
+        }
+            
+        // Format number with thousand separators
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Add click event listener to logo container for dashboard navigation
+            if (logoContainer) {
+                logoContainer.addEventListener('click', function() {
+                    window.location.href = 'dashboard.html';
+                });
+            }
+
+            // Handle click on all menu items
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Skip if this is the Laporan menu
+                    if (this.id === 'laporan-menu') {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Remove active class from ALL menu items
+                    menuItems.forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // If clicking on a submenu item, keep the submenu open
+                    if (this.closest('.submenu')) {
+                        // Ensure the parent submenu is open
+                        const parentSubmenu = this.closest('.submenu');
+                        const parentHasSubmenu = this.closest('.has-submenu');
+                        
+                        if (parentSubmenu && !parentSubmenu.classList.contains('show')) {
+                            parentSubmenu.classList.add('show');
+                            if (parentHasSubmenu) {
+                                parentHasSubmenu.classList.add('active');
+                            }
+                        }
+                    } else {
+                        // If clicking on a non-submenu item, close all submenus
+                        const allSubmenus = document.querySelectorAll('.submenu.show');
+                        allSubmenus.forEach(submenu => {
+                            submenu.classList.remove('show');
+                            const parentHasSubmenu = submenu.closest('.has-submenu');
+                            if (parentHasSubmenu) {
+                                parentHasSubmenu.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Handle Laporan menu click (toggle submenu)
+            if (laporanMenu) {
+                laporanMenu.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Toggle submenu visibility
+                    if (laporanSubmenu) {
+                        laporanSubmenu.classList.toggle('show');
+                    }
+                    if (hasSubmenu) {
+                        hasSubmenu.classList.toggle('active');
+                    }
+                    
+                    // Close other submenus if any
+                    const otherSubmenus = document.querySelectorAll('.submenu.show');
+                    otherSubmenus.forEach(submenu => {
+                        if (submenu !== laporanSubmenu) {
+                            submenu.classList.remove('show');
+                            const parentHasSubmenu = submenu.closest('.has-submenu');
+                            if (parentHasSubmenu) {
+                                parentHasSubmenu.classList.remove('active');
+                            }
+                        }
+                    });
+                });
+            }
+
+            logoutContainer.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                showLogoutModal();
+            });
+
+            // Event listener untuk tombol cancel logout
+            cancelLogoutBtn.addEventListener('click', function() {
+                hideLogoutModal();
+            });
+            
+            // Event listener untuk tombol confirm logout
+            confirmLogoutBtn.addEventListener('click', function() {
+                localStorage.clear();
+                window.location.replace('./login.html');
+            });
+            
+            // Event listener untuk overlay modal
+            modalOverlay.addEventListener('click', function() {
+                hideLogoutModal();
+            });
+            
+            // Close submenu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.has-submenu') && !e.target.closest('.submenu')) {
+                    if (laporanSubmenu) {
+                        laporanSubmenu.classList.remove('show');
+                    }
+                    if (hasSubmenu) {
+                        hasSubmenu.classList.remove('active');
+                    }
+                }
+            });
+
+            // Button Batal functionality
+            if (batalBtn) {
+                batalBtn.addEventListener('click', function() {
+                    resetForm();
+
+                    alert('Form telah dibersihkan');
+                });
+            }
+
+            // Button Simpan functionality
+            if (simpanBtn) {
+                simpanBtn.addEventListener('click', async function() {
+                    saveTransaksi();
+                });
+            }
+
+            // Event listeners untuk modal
+            closeModalBtn.addEventListener('click', closeStrukModal);
+            cetakStrukBtn.addEventListener('click', cetakStruk);
+            
+            // Tutup modal saat klik di luar konten modal
+            window.addEventListener('click', function(event) {
+                if (event.target === strukModal) {
+                    closeStrukModal();
+                }
+            });
+
+            // Tutup modal dengan tombol ESC
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeStrukModal();
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

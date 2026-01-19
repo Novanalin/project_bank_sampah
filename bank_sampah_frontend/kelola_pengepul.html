@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Pengepul - Bank Sampah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-container" id="logo-container">
+            <div class="logo-wrapper">
+                <img src="./img/logo_bank_sampah.jpeg" alt="Logo Bank Sampah" class="logo">
+            </div>
+            <div class="app-title">Bank Sampah</div>
+        </div>
+        
+        <ul class="menu">
+            <li class="menu-section">Transaksi</li>
+            <li><a href="transaksi_input.html" class="menu-item"><i class="fas fa-sign-in-alt"></i> <span>Transaksi Input</span></a></li>
+            <li><a href="transaksi_output.html" class="menu-item"><i class="fas fa-sign-out-alt"></i> <span>Transaksi Output</span></a></li>
+            
+            <li class="menu-section">Kelola Data</li>
+            <li><a href="kelola_akun.html" class="menu-item"><i class="fas fa-users"></i> <span>Kelola Akun</span></a></li>
+            <li><a href="#" class="menu-item active"><i class="fas fa-truck"></i> <span>Kelola Pengepul</span></a></li>
+            <li><a href="kelola_jenis_sampah.html" class="menu-item"><i class="fas fa-cog"></i> <span>Kelola Jenis Sampah</span></a></li>
+            
+            <li class="menu-section">Laporan</li>
+            <li class="has-submenu">
+                <a href="#" class="menu-item" id="laporan-menu">
+                    <i class="fas fa-chart-bar"></i> 
+                    <span>Laporan</span>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+                <ul class="submenu" id="laporan-submenu">
+                    <li><a href="laporan_transaksi.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> <span>Laporan Transaksi</span></a></li>
+                    <li><a href="laporan_stok.html" class="menu-item"><i class="fas fa-boxes"></i> <span>Laporan Stok</span></a></li>
+                </ul>
+            </li>
+            
+            <li class="menu-section">Akun</li>
+            <li><a href="#" class="menu-item" id="logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="page-title">Kelola Pengepul</h1>
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div class="user-text">
+                    <div class="user-greeting" id="user">Hi</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Content Container -->
+        <div class="content-container">
+            <!-- Search and Filter Section -->
+            <div class="search-filter-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Cari nama, ID, atau nomor telepon...">
+                </div>
+                
+                <div class="filter-container">
+                    <select class="filter-select" id="status-filter">
+                        <option value="">Semua Status</option>
+                        <option value="aktif">Aktif</option>
+                        <option value="nonaktif">Non Aktif</option>
+                    </select>
+                    
+                    <button class="btn-add" id="btn-add-pengepul">
+                        <i class="fas fa-plus"></i> Tambah Pengepul
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Table Container -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>ID Pengepul</th>
+                            <th>Nama Pengepul</th>
+                            <th>No. Telepon</th>
+                            <th>Status</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pengepul-table-body">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <div class="pagination-info" id="pagination-info">
+                    Menampilkan 1 sampai 4 dari 4 data
+                </div>
+                
+                <div class="pagination" id="pagination">
+                    <!-- Pagination buttons will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Add/Edit Pengepul -->
+    <div class="modal" id="pengepul-modal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modal-title">Tambah Pengepul Baru</h2>
+            
+            <form id="pengepul-form">
+                <div>
+                    <label class="modal-label">ID Pengepul</label>
+                    <input type="text" id="modal-id" class="modal-input" disabled>
+                </div>
+                
+                <div>
+                    <label class="modal-label">Nama Pengepul</label>
+                    <input type="text" id="modal-nama" class="modal-input" required>
+                </div>
+                
+                <div>
+                    <label class="modal-label">Nomor Telepon (12 digit)</label>
+                    <input type="text" id="modal-telepon" class="modal-input" 
+                           pattern="\d{12}" 
+                           maxlength="12"
+                           placeholder="Contoh: 081234567890" 
+                           required>
+                    <small style="color: #666; font-size: 12px;">Format: 12 digit angka (contoh: 081234567890)</small>
+                </div>
+                
+                <div>
+                    <label class="modal-label">Status</label>
+                    <select id="modal-status" class="modal-input" required>
+                        <option value="Aktif">Aktif</option>
+                        <option value="Nonaktif">Nonaktif</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" id="btn-cancel" class="modal-btn modal-btn-cancel">Batal</button>
+                    <button type="submit" id="btn-save" class="modal-btn modal-btn-save">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Overlay untuk modal (DI BAWAH MODAL) -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+    
+    <!-- Modal Konfirmasi Logout (DI ATAS OVERLAY) -->
+    <div class="logout-modal" id="logout-modal">
+        <div class="modal-icon">
+            <img src="./img/icon_logout.png" width="100" height="100">
+        </div>
+        <p class="modal-message">Apakah Anda yakin ingin keluar?</p>
+        <div class="modal-buttons">
+            <button class="modal-btn-logout cancel" id="cancel-logout">Tidak</button>
+            <button class="modal-btn-logout confirm" id="confirm-logout">Ya</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const logoContainer = document.getElementById('logo-container');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const laporanMenu = document.getElementById('laporan-menu');
+        const laporanSubmenu = document.getElementById('laporan-submenu');
+        const hasSubmenu = laporanMenu ? laporanMenu.closest('.has-submenu') : null;
+        const logoutContainer = document.getElementById('logout');
+        const logoutModal = document.getElementById('logout-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const cancelLogoutBtn = document.getElementById('cancel-logout');
+        const confirmLogoutBtn = document.getElementById('confirm-logout');
+        const pengepulTableBody = document.getElementById('pengepul-table-body');
+        const paginationInfo = document.getElementById('pagination-info');
+        const paginationContainer = document.getElementById('pagination');
+        const searchInput = document.getElementById('search-input');
+        const statusFilter = document.getElementById('status-filter');
+        const btnAddPengepul = document.getElementById('btn-add-pengepul');
+        const pengepulModal = document.getElementById('pengepul-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const pengepulForm = document.getElementById('pengepul-form');
+        const btnCancel = document.getElementById('btn-cancel');
+        const btnSave = document.getElementById('btn-save');
+        const modalTelepon = document.getElementById('modal-telepon');
+        
+        // State
+        let isLogin = false;
+        let storedLoginData;
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentEditId = null;
+        let pengepul = [];
+
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginData();
+
+            if (isLogin) {
+                // Fetch data from server when page loads
+                fetchData();
+
+                // Setup event listeners
+                setupEventListeners();
+            }
+        });
+
+        function checkLoginData() {
+            // Retrieve the value using the same key 'loginData'
+            storedLoginData = JSON.parse(localStorage.getItem('loginData'));
+
+            if (storedLoginData == null) {
+                window.location.replace('./login.html');
+            } else {
+                isLogin = true;
+                document.getElementById("user").textContent = `Hi, ${storedLoginData.nama}`;
+            }
+        }
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/pengepul');
+                console.log('response', response);
+
+				const result = await response.json();
+				console.log('result', result);
+
+                pengepul = result.data || [];
+                console.log('data', pengepul);
+
+                renderTable();
+            } catch (error) {
+                console.error('Error during fetch data:', error);
+        		alert('An error occurred. Please try again later.');
+            }
+        }
+       
+        // Filter pengepul based on search and filters
+        function getFilteredPengepul() {
+            let filtered = [...pengepul];
+            
+            // Apply search filter
+            const searchTerm = searchInput.value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(p => 
+                    p.nama.toLowerCase().includes(searchTerm) || 
+                    String(p.pengepulID).includes(searchTerm) ||
+                    p.telepon.includes(searchTerm)
+                );
+            }
+            
+            // Apply status filter
+            const statusFilterValue = statusFilter.value;
+            if (statusFilterValue) {
+                filtered = filtered.filter(p => 
+                    p.status.toLowerCase() === statusFilterValue
+                );
+            }
+            
+            return filtered;
+        }
+
+        // Render table with pengepul
+        function renderTable() {
+            const filteredPengepul = getFilteredPengepul();
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedPengepul = filteredPengepul.slice(startIndex, endIndex);
+            
+            // Clear table body
+            pengepulTableBody.innerHTML = '';
+            
+            // Add rows to table
+            paginatedPengepul.forEach((p, index) => {
+                const rowNumber = startIndex + index + 1;
+                const row = document.createElement('tr');
+                
+                // Format nomor telepon untuk tampilan lebih baik
+                const teleponFormatted = p.telepon.replace(/(\d{4})(\d{4})(\d{4})/, '$1-$2-$3');
+                
+                row.innerHTML = `
+                    <td>${rowNumber}.</td>
+                    <td>${p.pengepulID}</td>
+                    <td>${p.nama}</td>
+                    <td>${teleponFormatted}</td>
+                    <td><span class="status-badge ${p.status === 'Aktif' ? 'status-aktif' : 'status-nonaktif'}">${p.status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" data-id="${p.pengepulID}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                pengepulTableBody.appendChild(row);
+            });
+            
+            // Update pagination info
+            const totalPengepul = filteredPengepul.length;
+            const start = totalPengepul > 0 ? startIndex + 1 : 0;
+            const end = Math.min(endIndex, totalPengepul);
+            
+            paginationInfo.textContent = `Menampilkan ${start} sampai ${end} dari ${totalPengepul} data`;
+            
+            // Render pagination buttons
+            renderPagination(totalPengepul);
+            
+            // Add event listeners to action buttons
+            addActionButtonListeners();
+        }
+
+        // Render pagination buttons
+        function renderPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            paginationContainer.innerHTML = '';
+            
+            // Previous button
+            const prevButton = document.createElement('button');
+            prevButton.className = 'pagination-btn';
+            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                }
+            });
+            paginationContainer.appendChild(prevButton);
+            
+            // Page buttons
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', function() {
+                    currentPage = i;
+                    renderTable();
+                });
+                paginationContainer.appendChild(pageButton);
+            }
+            
+            // Next button
+            const nextButton = document.createElement('button');
+            nextButton.className = 'pagination-btn';
+            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', function() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                }
+            });
+            paginationContainer.appendChild(nextButton);
+        }
+
+        // Add event listeners to action buttons in table
+        function addActionButtonListeners() {
+            // Edit buttons
+            const editButtons = document.querySelectorAll('.btn-edit');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pengepulId = this.getAttribute('data-id');
+                    editPengepul(pengepulId);
+                });
+            });
+        }
+
+        // Open modal for adding or editing pengepul
+        function openModal(data = null) {
+            if (data) {
+                // Edit mode
+                modalTitle.textContent = 'Edit Pengepul';
+                document.getElementById('modal-id').value = data.pengepulID;
+                document.getElementById('modal-nama').value = data.nama;
+                document.getElementById('modal-telepon').value = data.telepon;
+                document.getElementById('modal-status').value = data.status;
+                currentEditId = data.id;
+            } else {
+                // Add mode
+                modalTitle.textContent = 'Tambah Pengepul Baru';
+                document.getElementById('modal-id').value = '';
+                document.getElementById('modal-nama').value = '';
+                document.getElementById('modal-telepon').value = '';
+                document.getElementById('modal-status').value = 'Aktif';
+                currentEditId = null;
+            }
+            
+            pengepulModal.style.display = 'flex';
+        }
+
+        // Close modal
+        function closeModal() {
+            pengepulModal.style.display = 'none';
+            pengepulForm.reset();
+            currentEditId = null;
+        }
+
+        // Validate telephone number (12 digits)
+        function validateTelephoneNumber(telepon) {
+            // Check if it's exactly 12 digits
+            if (!/^\d{12}$/.test(telepon)) {
+                return false;
+            }
+            
+            // Check if it starts with valid Indonesian mobile prefix
+            const validPrefixes = ['081', '082', '083', '084', '085', '086', '087', '088', '089'];
+            const prefix = telepon.substring(0, 3);
+            
+            return validPrefixes.includes(prefix);
+        }
+
+        // Save pengepul (add or edit)
+        async function savePengepul() {
+            const pengepulID = document.getElementById('modal-id').value.trim();
+            const nama = document.getElementById('modal-nama').value.trim();
+            const telepon = document.getElementById('modal-telepon').value.trim();
+            const status = document.getElementById('modal-status').value;
+            
+            // Validate inputs
+            // if (!pengepulID || !name || !telepon || !status) {
+            //     alert('Semua field harus diisi!');
+            //     return;
+            // }
+            
+            // Validate telephone number
+            if (!validateTelephoneNumber(telepon)) {
+                alert('Nomor telepon harus 12 digit dan dimulai dengan kode operator Indonesia yang valid (081-089)!');
+                return;
+            }
+
+            const pengepulIndex = pengepul.findIndex(p => p.pengepulID == pengepulID);
+            if (pengepulIndex !== -1) {
+                // EDIT
+                let pengepulData = {
+                    pengepulID: pengepulID,
+                    nama: nama,
+                    telepon: telepon,
+                    status: status,
+                };
+
+                console.log('data', JSON.stringify(pengepulData));
+
+                try {
+					let response = await fetch('http://localhost:3000/pengepul', 
+					{
+						method: 'PATCH',
+						headers: {
+							'Access-Control-Allow-Headers' : 'Content-Type',
+              				'Access-Control-Allow-Origin': '*',
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(pengepulData)
+					});
+					console.log('response', response);
+
+					let result = await response.json();
+					console.log('result', result);
+
+					// 200 Success
+					if (response.status == 200) {
+						alert(`Pengepul ${pengepulID} berhasil diperbarui!`);
+					} else {
+					}
+		  		} catch (error) {
+					console.error('Error during save:', error);
+        			alert('An error occurred. Please try again later.');
+		  		}
+            } else {
+                // ADD
+                let pengepulData = {
+                    nama: nama,
+                    telepon: telepon,
+                };
+
+                console.log('data', JSON.stringify(pengepulData));
+
+                try {
+					let response = await fetch('http://localhost:3000/pengepul', 
+					{
+						method: 'POST',
+						headers: {
+							'Access-Control-Allow-Headers' : 'Content-Type',
+              				'Access-Control-Allow-Origin': '*',
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(pengepulData)
+					});
+					console.log('response', response);
+
+					let result = await response.json();
+					console.log('result', result);
+
+					// 200 Success
+					if (response.status == 200) {
+						// Show success message
+                        alert(`Pengepul berhasil disimpan!`);
+					} else {
+					}
+		  		} catch (error) {
+					console.error('Error during save:', error);
+        			alert('An error occurred. Please try again later.');
+		  		}
+            }
+            
+            // Re-render table and close modal
+            fetchData();
+            // renderTable();
+            closeModal();
+            
+            // Show success message
+            // alert(`Pengepul ${currentEditId ? 'berhasil diperbarui' : 'berhasil disimpan'}!`);
+        }
+
+        // Edit pengepul
+        function editPengepul(pengepulId) {
+            const p = pengepul.find(p => p.pengepulID == pengepulId);
+            if (p) {
+                openModal(p);
+            }
+        }
+
+        // Fungsi untuk menampilkan modal logout
+        function showLogoutModal() {
+            logoutModal.classList.add('show');
+            modalOverlay.classList.add('show');
+            // Blokir scroll body saat modal terbuka
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fungsi untuk menyembunyikan modal logout
+        function hideLogoutModal() {
+            logoutModal.classList.remove('show');
+            modalOverlay.classList.remove('show');
+            // Kembalikan scroll body
+            document.body.style.overflow = 'auto';
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Add click event listener to logo container for dashboard navigation
+            if (logoContainer) {
+                logoContainer.addEventListener('click', function() {
+                    window.location.href = 'dashboard.html';
+                });
+            }
+
+            // Handle click on all menu items
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Skip if this is the Laporan menu
+                    if (this.id === 'laporan-menu') {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Remove active class from ALL menu items
+                    menuItems.forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // If clicking on a submenu item, keep the submenu open
+                    if (this.closest('.submenu')) {
+                        // Ensure the parent submenu is open
+                        const parentSubmenu = this.closest('.submenu');
+                        const parentHasSubmenu = this.closest('.has-submenu');
+                        
+                        if (parentSubmenu && !parentSubmenu.classList.contains('show')) {
+                            parentSubmenu.classList.add('show');
+                            if (parentHasSubmenu) {
+                                parentHasSubmenu.classList.add('active');
+                            }
+                        }
+                    } else {
+                        // If clicking on a non-submenu item, close all submenus
+                        const allSubmenus = document.querySelectorAll('.submenu.show');
+                        allSubmenus.forEach(submenu => {
+                            submenu.classList.remove('show');
+                            const parentHasSubmenu = submenu.closest('.has-submenu');
+                            if (parentHasSubmenu) {
+                                parentHasSubmenu.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Handle Laporan menu click (toggle submenu)
+            if (laporanMenu) {
+                laporanMenu.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Toggle submenu visibility
+                    if (laporanSubmenu) {
+                        laporanSubmenu.classList.toggle('show');
+                    }
+                    if (hasSubmenu) {
+                        hasSubmenu.classList.toggle('active');
+                    }
+                    
+                    // Close other submenus if any
+                    const otherSubmenus = document.querySelectorAll('.submenu.show');
+                    otherSubmenus.forEach(submenu => {
+                        if (submenu !== laporanSubmenu) {
+                            submenu.classList.remove('show');
+                            const parentHasSubmenu = submenu.closest('.has-submenu');
+                            if (parentHasSubmenu) {
+                                parentHasSubmenu.classList.remove('active');
+                            }
+                        }
+                    });
+                });
+            }
+
+            logoutContainer.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                showLogoutModal();
+            });
+
+            // Event listener untuk tombol cancel logout
+            cancelLogoutBtn.addEventListener('click', function() {
+                hideLogoutModal();
+            });
+            
+            // Event listener untuk tombol confirm logout
+            confirmLogoutBtn.addEventListener('click', function() {
+                localStorage.clear();
+                window.location.replace('./login.html');
+            });
+            
+            // Event listener untuk overlay modal
+            modalOverlay.addEventListener('click', function() {
+                hideLogoutModal();
+            });
+
+            // Close submenu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.has-submenu') && !e.target.closest('.submenu')) {
+                    if (laporanSubmenu) {
+                        laporanSubmenu.classList.remove('show');
+                    }
+                    if (hasSubmenu) {
+                        hasSubmenu.classList.remove('active');
+                    }
+                }
+            });
+
+            // Search input
+            searchInput.addEventListener('input', function() {
+                currentPage = 1;
+                renderTable();
+            });
+            
+            // Filter select
+            statusFilter.addEventListener('change', function() {
+                currentPage = 1;
+                renderTable();
+            });
+            
+            // Add pengepul button
+            btnAddPengepul.addEventListener('click', function() {
+                openModal();
+            });
+            
+            // Cancel button in modal
+            btnCancel.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            // Save button in modal (form submit)
+            pengepulForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                savePengepul();
+            });
+            
+            // Close modal when clicking outside
+            pengepulModal.addEventListener('click', function(e) {
+                if (e.target === pengepulModal) {
+                    closeModal();
+                }
+            });
+            
+            // Validate telephone number input (only numbers, max 12 digits)
+            modalTelepon.addEventListener('input', function() {
+                // Remove any non-numeric characters
+                this.value = this.value.replace(/\D/g, '');
+                
+                // Limit to 12 digits
+                if (this.value.length > 12) {
+                    this.value = this.value.slice(0, 12);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

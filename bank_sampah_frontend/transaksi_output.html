@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaksi Output - Bank Sampah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-container" id="logo-container">
+            <div class="logo-wrapper">
+                <img src="./img/logo_bank_sampah.jpeg" alt="Logo Bank Sampah" class="logo">
+            </div>
+            <div class="app-title">Bank Sampah</div>
+        </div>
+        
+        <ul class="menu">
+            <li class="menu-section">Transaksi</li>
+            <li><a href="transaksi_input.html" class="menu-item"><i class="fas fa-sign-in-alt"></i> <span>Transaksi Input</span></a></li>
+            <li><a href="#" class="menu-item active"><i class="fas fa-sign-out-alt"></i> <span>Transaksi Output</span></a></li>
+            
+            <li class="menu-section">Kelola Data</li>
+            <li><a href="kelola_akun.html" class="menu-item"><i class="fas fa-users"></i> <span>Kelola Akun</span></a></li>
+            <li><a href="kelola_pengepul.html" class="menu-item"><i class="fas fa-truck"></i> <span>Kelola Pengepul</span></a></li>
+            <li><a href="kelola_jenis_sampah.html" class="menu-item"><i class="fas fa-cog"></i> <span>Kelola Jenis Sampah</span></a></li>
+            
+            <li class="menu-section">Laporan</li>
+            <li class="has-submenu">
+                <a href="#" class="menu-item" id="laporan-menu">
+                    <i class="fas fa-chart-bar"></i> 
+                    <span>Laporan</span>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+                <ul class="submenu" id="laporan-submenu">
+                    <li><a href="laporan_transaksi.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> <span>Laporan Transaksi</span></a></li>
+                    <li><a href="laporan_stok.html" class="menu-item"><i class="fas fa-boxes"></i> <span>Laporan Stok</span></a></li>
+                </ul>
+            </li>
+            
+            <li class="menu-section">Akun</li>
+            <li><a href="#" class="menu-item" id="logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="page-title">Transaksi Output</h1>
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div class="user-text">
+                    <div class="user-greeting" id="user">Hi</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Container -->
+        <div class="form-container">
+            <div class="transaction-header">
+                <div class="transaction-id" id="transactionID">ID Transaksi : -</div>
+                <div class="transaction-date" id="current-date">Tanggal: Loading...</div>
+            </div>
+            
+            <!-- ID Customer Input -->
+            <div class="form-group">
+                <label for="id-customer">ID Pengepul :</label>
+                <div class="select-container">
+                    <select id="id-pengepul" class="custom-select">
+                        <option value="">-- Memuat data pengepul... --</option>
+                    </select>
+
+                    <div class="select-arrow">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Jenis Sampah Section -->
+            <div class="jenis-sampah-section">
+                <div class="jenis-sampah-title">Jenis Sampah</div>
+
+                <div id="dynamic-waste-container">
+                    <p style="text-align: center; padding: 20px;">Memuat data sampah...</p>
+                </div>
+            </div>
+            
+            <!-- Grand Total -->
+            <div class="grand-total">
+                <div class="grand-total-content">
+                    <div class="grand-total-label">Grand Total</div>
+                    <div class="grand-total-value">= Rp <span id="grand-total-value">0</span></div>
+                </div>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="buttons-container">
+                <button type="button" class="btn btn-batal">Batal</button>
+                <button type="button" class="btn btn-simpan">Simpan Transaksi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay untuk modal (DI BAWAH MODAL) -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+    
+    <!-- Modal Konfirmasi Logout (DI ATAS OVERLAY) -->
+    <div class="logout-modal" id="logout-modal">
+        <div class="modal-icon">
+            <img src="./img/icon_logout.png" width="100" height="100">
+        </div>
+        <p class="modal-message">Apakah Anda yakin ingin keluar?</p>
+        <div class="modal-buttons">
+            <button class="modal-btn-logout cancel" id="cancel-logout">Tidak</button>
+            <button class="modal-btn-logout confirm" id="confirm-logout">Ya</button>
+        </div>
+    </div>
+
+    <script>
+        const logoContainer = document.getElementById('logo-container');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const laporanMenu = document.getElementById('laporan-menu');
+        const laporanSubmenu = document.getElementById('laporan-submenu');
+        const hasSubmenu = laporanMenu ? laporanMenu.closest('.has-submenu') : null;
+        const logoutContainer = document.getElementById('logout');
+        const logoutModal = document.getElementById('logout-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const cancelLogoutBtn = document.getElementById('cancel-logout');
+        const confirmLogoutBtn = document.getElementById('confirm-logout');
+        const jenisSampahContainer = document.getElementById('dynamic-waste-container');
+        const grandTotalValue = document.getElementById('grand-total-value');
+        
+        let isLogin = false;
+        let storedLoginData;
+        let dateString;
+        let sampahData = [];
+        let detail = {};
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginData();
+
+            if (isLogin) {
+                // Panggil fungsi updateDateTime saat halaman dimuat
+                updateDateTime();
+
+                fetchMaxTransactionID();
+
+                fetchPengepulList();
+
+                // Fetch data from server when page loads
+                fetchData();
+                
+                // Setup event listeners
+                setupEventListeners();
+            }
+        });
+
+        function checkLoginData() {
+            // Retrieve the value using the same key 'loginData'
+            storedLoginData = JSON.parse(localStorage.getItem('loginData'));
+
+            if (storedLoginData == null) {
+                window.location.replace('./login.html');
+            } else {
+                isLogin = true;
+                document.getElementById("user").textContent = `Hi, ${storedLoginData.nama}`;
+            }
+        }
+
+        async function fetchMaxTransactionID() {
+            const transactionID = document.getElementById('transactionID');
+                
+            try {
+                // Replace with your actual customer endpoint
+                const response = await fetch('http://localhost:3000/transaksi/maxid');
+                const result = await response.json();
+                    
+                // Handle result.data if your API wraps it, otherwise use result
+                const maxid = result.data + 1;
+
+                transactionID.textContent = `ID Transaksi : ${maxid}`;
+            } catch (error) {
+                console.error('Error loading max id:', error);
+            }
+        }
+
+        async function fetchPengepulList() {
+            const pengepulSelect = document.getElementById('id-pengepul');
+                
+            try {
+                // Replace with your actual customer endpoint
+                const response = await fetch('http://localhost:3000/pengepul');
+                const result = await response.json();
+                    
+                // Handle result.data if your API wraps it, otherwise use result
+                const pengepuls = result.data || result;
+
+                // Clear existing options
+                pengepulSelect.innerHTML = '<option value="">-- Pilih ID Pengepul --</option>';
+
+                // Loop through the array and create options
+                pengepuls.forEach(pengepul => {
+                    const option = document.createElement('option');
+                        
+                    // value is what gets sent to the server (the ID)
+                    option.value = pengepul.pengepulID || pengepul.id; 
+                        
+                    // text is what the user sees in the dropdown
+                    option.textContent = `${option.value} - ${pengepul.nama}`;
+                        
+                    pengepulSelect.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                pengepulSelect.innerHTML = '<option value="">Gagal memuat data</option>';
+            }
+        }
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/sampah');
+                console.log('response', response);
+
+                const result = await response.json();
+                console.log('result', result);
+
+                sampahData = result.data || [];
+                console.log('data', sampahData);
+
+                renderTable();
+            } catch (error) {
+                console.error('Error during fetch data:', error);
+                alert('An error occurred. Please try again later.');
+            }
+        }
+
+        function renderTable() {
+            jenisSampahContainer.innerHTML = "";
+
+            sampahData.forEach(item => {
+                if (item.stok > 0) {
+                    const itemHtml = `
+                        <div class="jenis-sampah-item" data-id="${item.jenisSampahID}" data-name="${item.namaJenis}" data-price="${item.hargaPerKg}" data-stok="${item.stok}">
+                            <div class="jenis-sampah-name">
+                                <i class="fas fa-recycle"></i> ${item.namaJenis}
+                            </div>
+                            <table class="input-table">
+                                <tr>
+                                    <th>Stok Tersedia</th>
+                                    <td>
+                                        <span id="stok-${item.jenisSampahID}" class="stock-info">${item.stok} Kg</span>
+                                        <div id="warning-${item.jenisSampahID}" class="stok-warning">Berat melebihi stok tersedia!</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Berat Dijual</th>
+                                    <td>
+                                        <input type="number" id="berat-${item.jenisSampahID}" class="weight-input" min="0" step="0.1" value="0" max="45.5">
+                                        <span class="unit-label">Kg</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Harga Jual/kg</th>
+                                    <td>
+                                        <div class="price-container">
+                                            <span class="unit-label">Rp</span>
+                                            <input type="text" id="harga-${item.jenisSampahID}" class="price-input" value="0">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td>
+                                        <span id="total-display-${item.jenisSampahID}" class="total-display">Rp 0</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    `;
+
+                    jenisSampahContainer.insertAdjacentHTML("beforeend", itemHtml);
+                }
+            });
+
+            setupCalculationListeners();
+        }
+
+        // Calculate total for each jenis sampah and grand total
+        function calculateTotals() {
+            let grandTotal = 0;
+
+            const allItems = document.querySelectorAll('.jenis-sampah-item');
+
+            allItems.forEach(item => {
+                const id = item.getAttribute('data-id');
+                // const price = parseFloat(item.getAttribute('data-price')) || 0;
+                const priceItem = parsePriceInput(document.getElementById(`harga-${id}`).value);
+                const weightInput = item.querySelector('.weight-input');
+                let weight = parseFloat(weightInput.value) || 0;
+                const name = item.getAttribute("data-name");
+                const stok = item.getAttribute("data-stok");
+
+                // Validasi stok
+                const warning = document.getElementById(`warning-${id}`);
+                if (weight > stok) {
+                    warning.classList.add('show');
+                    document.getElementById(`berat-${id}`).style.borderColor = 'var(--danger-color)';
+
+                    weight = stok;
+                } else {
+                    warning.classList.remove('show');
+                    document.getElementById(`berat-${id}`).style.borderColor = '';
+                }
+
+                // const priceItem = parsePriceInput(document.getElementById(`harga-${id}`).value);
+                if (priceItem > 0) {
+                    document.getElementById(`harga-${id}`).style.borderColor = '';
+                }
+
+                const total = weight * priceItem;
+                    
+                // Update the "Total" display for this specific item
+                const totalDisplay = document.getElementById(`total-display-${id}`);
+                if (totalDisplay) {
+                    totalDisplay.textContent = formatCurrency(total);
+                }
+
+                grandTotal += total;       
+                    
+                let itemDetail = {
+                    jenisSampahID: parseInt(id),
+                    namaJenis: name,
+                    hargaPerKg: priceItem,
+                    berat: weight,
+                    subtotal: total
+                }
+
+                if (!detail.hasOwnProperty(id)) {
+                    detail[id] = {};
+                }
+
+                detail[id] = itemDetail;
+            });
+
+            grandTotalValue.textContent = formatNumber(grandTotal);
+        }
+
+        function resetForm() {
+            // Reset ID Pengepul
+            const idPengepulSelect = document.getElementById('id-pengepul');
+            if (idPengepulSelect) {
+                idPengepulSelect.value = '';
+            }
+
+            const weightInputs = document.querySelectorAll('.weight-input');
+            weightInputs.forEach(input => {
+                input.value = 0;
+            });
+
+            const priceInputs = document.querySelectorAll('.price-input');
+            priceInputs.forEach(input => {
+                input.value = 0;
+            });
+
+            // Reset warnings
+            document.querySelectorAll('.stok-warning').forEach(warning => {
+                warning.classList.remove('show');
+            });
+                    
+            // Reset border colors
+            document.querySelectorAll('.weight-input, .price-input').forEach(input => {
+                input.style.borderColor = '';
+            });
+
+            // Recalculate totals
+            calculateTotals();
+
+            fetchMaxTransactionID();
+
+            fetchData();
+        }
+
+        async function saveTransaksi() {
+            const idPengepulSelect = document.getElementById('id-pengepul');
+            const idPengepul = idPengepulSelect ? idPengepulSelect.value.trim() : '';
+            const grandTotalEl = document.getElementById('grand-total-value');
+            const grandTotal = grandTotalEl ? grandTotalEl.textContent : '0';
+                    
+            // Check for any warnings (berat melebihi stok)
+            const warnings = document.querySelectorAll('.stok-warning.show');
+            if (warnings.length > 0) {
+                alert('Terdapat berat yang melebihi stok tersedia! Harap periksa kembali.');
+                return;
+            }
+                    
+            if (!idPengepul) {
+                alert('Harap pilih ID Pengepul terlebih dahulu!');
+                if (idPengepulSelect) {
+                    idPengepulSelect.focus();
+                }
+                return;
+            }
+                    
+            // Check if at least one weight is greater than 0
+            const weightInputs = document.querySelectorAll('.weight-input');
+            let totalWeight = 0;
+            weightInputs.forEach(input => {
+                totalWeight += parseFloat(input.value) || 0;
+            });
+                    
+            if (totalWeight === 0) {
+                alert('Harap masukkan berat sampah yang akan dijual terlebih dahulu!');
+                return;
+            }
+                    
+            // Check if all prices are valid (greater than 0)
+            let invalidPrice = false;
+            const priceInputs = document.querySelectorAll('.price-input');
+            priceInputs.forEach(input => {
+                const price = parsePriceInput(input.value);
+                if (price <= 0) {
+                    invalidPrice = true;
+                    input.style.borderColor = 'var(--danger-color)';
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+                    
+            if (invalidPrice) {
+                alert('Harap masukkan harga jual yang valid (lebih dari 0) untuk semua jenis sampah yang akan dijual!');
+                return;
+            }
+                    
+            // Get selected option text
+            const selectedOption = idPengepulSelect.options[idPengepulSelect.selectedIndex];
+            const pengepulInfo = selectedOption.text;
+
+            let totalHarga = grandTotal.replace(/\./g,"");
+
+            const transactionData = {
+    			adminID: parseInt(storedLoginData.adminID),
+            	customerID: null,
+                pengepulID: parseInt(idPengepul),
+                tanggal: dateString,
+                totalBerat: 0,
+                totalHarga: parseInt(totalHarga),
+                detail: []
+          	};
+
+            // ONLY ADD INTO ARRAY DETAIL IF WEIGHT MORE THAN 0
+            let totalBerat = 0
+                    
+            for (let x in detail) {
+                if (detail[x].berat > 0) {
+                    totalBerat += detail[x].berat;
+                    transactionData.detail.push(detail[x]);
+                }
+            }
+
+            transactionData.totalBerat = totalBerat;
+            console.log(transactionData);
+
+            try {
+				const response = await fetch('http://localhost:3000/transaksi/output', 
+				{
+					method: 'POST',
+					headers: {
+						'Access-Control-Allow-Headers' : 'Content-Type',
+              			'Access-Control-Allow-Origin': '*',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(transactionData)
+				});
+				console.log('response', response);
+
+				const result = await response.json();
+				console.log('result', result);
+
+				// 200 Success
+				if (response.status == 200) {
+					status = 200;
+                    alert(`Transaksi output berhasil disimpan!\n\nID Pengepul: ${pengepulInfo}\nTotal Jenis Sampah: ${transactionData.detail.length}\nGrand Total: Rp ${grandTotal}`);
+				} else {
+
+				}
+			} catch (error) {
+				console.error('Error during save transaction:', error);
+        		alert('An error occurred. Please try again later.');
+  			}                    
+                    
+            resetForm();
+        }
+
+        // Date function - tanggal, bulan, tahun
+        function updateDateTime() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+                
+            // Format: DD/MM/YYYY
+            dateString = `${day}/${month}/${year}`;
+                
+            // Update elemen HTML
+            const dateElement = document.getElementById('current-date');
+            if (dateElement) {
+                dateElement.textContent = `Tanggal: ${dateString}`;
+            }
+        }
+
+        // Fungsi untuk menampilkan modal logout
+        function showLogoutModal() {
+            logoutModal.classList.add('show');
+            modalOverlay.classList.add('show');
+            // Blokir scroll body saat modal terbuka
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fungsi untuk menyembunyikan modal logout
+        function hideLogoutModal() {
+            logoutModal.classList.remove('show');
+            modalOverlay.classList.remove('show');
+            // Kembalikan scroll body
+            document.body.style.overflow = 'auto';
+        }
+
+        // Format number with thousand separators
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+            
+        // Format currency to Rupiah
+        function formatCurrency(amount) {
+            return 'Rp ' + formatNumber(amount);
+        }
+            
+        // Parse formatted price input (remove dots)
+        function parsePriceInput(value) {
+            if (!value) return 0;
+            // Remove all non-digit characters except numbers
+            const numericValue = value.toString().replace(/\./g, '');
+            return parseInt(numericValue) || 0;
+        }
+            
+        // Format price input while typing
+        function formatPriceInput(input) {
+            const value = input.value;
+            // Remove all non-digit characters
+            const numericValue = value.replace(/[^0-9]/g, '');
+                
+            if (numericValue === '') {
+                input.value = '';
+                return;
+            }
+                
+            const intValue = parseInt(numericValue, 10);
+            if (isNaN(intValue)) {
+                input.value = '';
+                return;
+            }
+                
+            const formattedValue = formatNumber(intValue);
+            input.value = formattedValue;
+        }
+            
+        function setupCalculationListeners() {
+            const inputs = document.querySelectorAll('.weight-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', calculateTotals);
+            });
+
+            // // Validasi input tidak boleh melebihi stok
+            // input.addEventListener('change', function() {
+            //     const id = this.id;
+            //     const jenis = id.split('-')[1];
+            //     const maxStok = stokData[jenis];
+            //     const currentValue = parseFloat(this.value) || 0;
+                    
+            //     if (currentValue > maxStok) {
+            //         this.value = maxStok;
+            //         calculateTotals();
+            //         alert(`Berat tidak boleh melebihi stok tersedia (${maxStok} Kg)`);
+            //     }
+            // });
+
+            const priceInputs = document.querySelectorAll('.price-input');
+            priceInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    // Format price while typing
+                    formatPriceInput(input);
+                    calculateTotals();
+                });
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Add click event listener to logo container for dashboard navigation
+            if (logoContainer) {
+                logoContainer.addEventListener('click', function() {
+                    window.location.href = 'dashboard.html';
+                });
+            }
+
+            // Handle click on all menu items
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Skip if this is the Laporan menu
+                    if (this.id === 'laporan-menu') {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Remove active class from ALL menu items
+                    menuItems.forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // If clicking on a submenu item, keep the submenu open
+                    if (this.closest('.submenu')) {
+                        // Ensure the parent submenu is open
+                        const parentSubmenu = this.closest('.submenu');
+                        const parentHasSubmenu = this.closest('.has-submenu');
+                        
+                        if (parentSubmenu && !parentSubmenu.classList.contains('show')) {
+                            parentSubmenu.classList.add('show');
+                            if (parentHasSubmenu) {
+                                parentHasSubmenu.classList.add('active');
+                            }
+                        }
+                    } else {
+                        // If clicking on a non-submenu item, close all submenus
+                        const allSubmenus = document.querySelectorAll('.submenu.show');
+                        allSubmenus.forEach(submenu => {
+                            submenu.classList.remove('show');
+                            const parentHasSubmenu = submenu.closest('.has-submenu');
+                            if (parentHasSubmenu) {
+                                parentHasSubmenu.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Handle Laporan menu click (toggle submenu)
+            if (laporanMenu) {
+                laporanMenu.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Toggle submenu visibility
+                    if (laporanSubmenu) {
+                        laporanSubmenu.classList.toggle('show');
+                    }
+                    if (hasSubmenu) {
+                        hasSubmenu.classList.toggle('active');
+                    }
+                    
+                    // Close other submenus if any
+                    const otherSubmenus = document.querySelectorAll('.submenu.show');
+                    otherSubmenus.forEach(submenu => {
+                        if (submenu !== laporanSubmenu) {
+                            submenu.classList.remove('show');
+                            const parentHasSubmenu = submenu.closest('.has-submenu');
+                            if (parentHasSubmenu) {
+                                parentHasSubmenu.classList.remove('active');
+                            }
+                        }
+                    });
+                });
+            }
+
+            logoutContainer.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                showLogoutModal();
+            });
+
+            // Event listener untuk tombol cancel logout
+            cancelLogoutBtn.addEventListener('click', function() {
+                hideLogoutModal();
+            });
+            
+            // Event listener untuk tombol confirm logout
+            confirmLogoutBtn.addEventListener('click', function() {
+                localStorage.clear();
+                window.location.replace('./login.html');
+            });
+            
+            // Event listener untuk overlay modal
+            modalOverlay.addEventListener('click', function() {
+                hideLogoutModal();
+            });
+
+            // Close submenu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.has-submenu') && !e.target.closest('.submenu')) {
+                    if (laporanSubmenu) {
+                        laporanSubmenu.classList.remove('show');
+                    }
+                    if (hasSubmenu) {
+                        hasSubmenu.classList.remove('active');
+                    }
+                }
+            });
+
+            // Button Batal functionality
+            const batalBtn = document.querySelector('.btn-batal');
+            if (batalBtn) {
+                batalBtn.addEventListener('click', function() {
+                    resetForm();
+                    alert('Form telah dibersihkan');
+                });
+            }
+            
+            // Button Simpan functionality
+            const simpanBtn = document.querySelector('.btn-simpan');
+            if (simpanBtn) {
+                simpanBtn.addEventListener('click', async function() {
+                    saveTransaksi();
+                });
+            }
+
+        }
+    </script>
+</body>
+
+</html>

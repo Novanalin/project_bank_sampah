@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:lts
+    container_name: mysql_db
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql # Optional: persist the actual database data
+    ports:
+      - "3306:3306" # Maps host port 3306 to container port 3306
+    expose:
+      - 3306
+    environment:
+      MYSQL_DATABASE: bank_sampah_db
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 1234
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin_ui
+    restart: always
+    ports:
+      - "8090:80" # Access phpMyAdmin at http://localhost:8090
+    environment:
+      PMA_HOST: mysql # Link to the MySQL service name defined in this file
+      MYSQL_ROOT_PASSWORD: 1234
+    depends_on:
+      - mysql
+
+# Define the named volumes at the top level
+volumes:
+  mysql_data:
+    name: mysql_data

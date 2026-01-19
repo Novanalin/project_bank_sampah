@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login - Bank Sampah</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="layout-container">
+		<!-- Panel Kiri: Poster -->
+		<div class="left-panel">
+		</div>
+
+		<!-- Panel Kanan: Form Login -->
+		<div class="right-panel">
+			<div class="login-container">
+				<!-- Logo -->
+				<div class="logo-container-login">
+					<img class="logo-login" src="./img/logo_bank_sampah.jpeg" alt="Logo Bank Sampah">
+					<h2 class="login-title">LOGIN</h2>
+				</div>
+
+				<!-- Form Login -->
+				<form id="loginForm">
+					<div class="form-group-login">
+						<label class="form-label" for="username">Username</label>
+						<input class="form-input" type="text" id="username" placeholder="Masukkan username">
+					</div>
+
+					<div class="form-group-login">
+						<label class="form-label" for="password">Password</label>
+						<input class="form-input" type="password" id="password" placeholder="Masukkan password">
+					</div>
+
+					<button type="submit" class="login-button">Masuk</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Dialog Box Pop-up untuk Login -->
+	<div class="dialog-overlay" id="dialogOverlay">
+		<div class="dialog-box">
+			<div class="dialog-icon">
+				<img id="dialogIcon" src="./img/icon_success.png">
+			</div>
+			<h3 class="dialog-title" id="dialogTitle">YEAAY !</h3>
+			<p class="dialog-message" id="dialogMessage">Kamu berhasil masuk !</p>
+			<button class="dialog-button" id="closeDialog">OK</button>
+		</div>
+	</div>
+
+	<script>
+		let loginForm, usernameInput, passwordInput, loginButton, dialogOverlay, dialogMessage, closeDialogBtn, dialogIcon, dialogTitle, status;
+
+		loginForm = document.getElementById('loginForm');
+		usernameInput = document.getElementById('username');
+		passwordInput = document.getElementById('password');
+		loginButton = document.querySelector('.login-button');
+		dialogOverlay = document.getElementById('dialogOverlay');
+		dialogMessage = document.getElementById('dialogMessage');
+		closeDialogBtn = document.getElementById('closeDialog');
+		dialogIcon = document.getElementById('dialogIcon');
+		dialogTitle = document.getElementById('dialogTitle');
+
+		document.addEventListener('DOMContentLoaded', function () {
+			// Fokus pada input username saat halaman dimuat
+			usernameInput.focus();
+
+			setupEventListeners();
+		});
+
+		async function login() {
+			const username = usernameInput.value.trim();
+			const password = passwordInput.value.trim();
+
+			if (username === '' || password === '') {
+				alert('Harap isi username dan password!');
+				if (username === '') {
+					usernameInput.focus();
+				} else {
+					passwordInput.focus();
+				}
+			} else {
+				loginButton.disabled = true;
+
+				const loginData = {
+					username: username,
+					password: password
+				};
+				console.log('data', JSON.stringify(loginData));
+
+				try {
+					const response = await fetch('http://localhost:3000/login',
+						{
+							method: 'POST',
+							headers: {
+								'Access-Control-Allow-Headers': 'Content-Type',
+								'Access-Control-Allow-Origin': '*',
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify(loginData)
+						});
+					console.log('response', response);
+
+					const result = await response.json();
+					console.log('result', result);
+
+					loginButton.textContent = 'Masuk';
+					loginButton.disabled = false;
+
+					// Reset form
+					passwordInput.value = '';
+					passwordInput.focus();
+
+					// 200 Success
+					if (response.status == 200) {
+						status = 200;
+
+						// Save the value to localStorage with a key called 'loginData'
+						localStorage.setItem('loginData', JSON.stringify(result.data));
+
+						showDialog("Kamu berhasil masuk !", "./img/icon_success.png", "YEAAY !")
+					} else {
+						showDialog("Username atau password yang Anda masukkan salah. Silahkan coba lagi.", "./img/icon_failed.png", "OOPS !")
+					}
+				} catch (error) {
+					console.error('Error during login:', error);
+					alert('An error occurred. Please try again later.');
+				}
+			}
+		}
+
+		// Fungsi untuk menampilkan dialog box
+		function showDialog(message, icon, title) {
+			dialogMessage.textContent = message;
+			dialogOverlay.style.display = 'flex';
+
+			dialogIcon.src = icon;
+			dialogTitle.textContent = title;
+
+			// Fokus ke tombol OK di dialog
+			setTimeout(() => {
+				closeDialogBtn.focus();
+			}, 100);
+		}
+
+		// Fungsi untuk menutup dialog box
+		function closeDialog() {
+			dialogOverlay.style.display = 'none';
+
+			// Reset form untuk Login Ulang
+			passwordInput.value = '';
+
+			//Fokus kembali ke input username
+			setTimeout(() => {
+				usernameInput.focus();
+				usernameInput.select();
+			}, 50);
+
+			if (status == 200) {
+				// Use window.location.replace() to prevent the user from using the back button to return to the original page
+				window.location.replace("./dashboard.html");
+			}
+		}
+
+		// Setup event listeners
+		function setupEventListeners() {
+			// Event listener untuk form submit
+			loginForm.addEventListener('submit', (e) => {
+				e.preventDefault();
+				login();
+			});
+
+			// Event listener untuk tombol OK di dialog box
+			closeDialogBtn.addEventListener('click', closeDialog);
+
+			// Tutup dialog box jika klik di luar area dialog box
+			dialogOverlay.addEventListener('click', function (e) {
+				if (e.target === dialogOverlay) {
+					closeDialog();
+				}
+			});
+
+			// Tutup dialog box dengan tombol Escape
+			document.addEventListener('keydown', function (e) {
+				if (e.key === 'Escape' && dialogOverlay.style.display === 'flex') {
+					closeDialog();
+				}
+			});
+
+			// Login dengan menekan Enter
+			document.addEventListener('keypress', function (e) {
+				if (e.key === 'Enter' && dialogOverlay.style.display !== 'flex') {
+					loginForm.requestSubmit();
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>

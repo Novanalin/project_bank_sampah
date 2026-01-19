@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Bank Sampah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-container" id="logo-container">
+            <div class="logo-wrapper">
+                <img src="./img/logo_bank_sampah.jpeg" alt="Logo Bank Sampah" class="logo">
+            </div>
+            <div class="app-title">Bank Sampah</div>
+        </div>
+        
+        <ul class="menu">
+            <li class="menu-section">Transaksi</li>
+            <li><a href="transaksi_input.html" class="menu-item"><i class="fas fa-sign-in-alt"></i> <span>Transaksi Input</span></a></li>
+            <li><a href="transaksi_output.html" class="menu-item"><i class="fas fa-sign-out-alt"></i> <span>Transaksi Output</span></a></li>
+            
+            <li class="menu-section">Kelola Data</li>
+            <li><a href="kelola_akun.html" class="menu-item"><i class="fas fa-users"></i> <span>Kelola Akun</span></a></li>
+            <li><a href="kelola_pengepul.html" class="menu-item"><i class="fas fa-truck"></i> <span>Kelola Pengepul</span></a></li>
+            <li><a href="kelola_jenis_sampah.html" class="menu-item"><i class="fas fa-cog"></i> <span>Kelola Jenis Sampah</span></a></li>
+            
+            <li class="menu-section">Laporan</li>
+            <li class="has-submenu">
+                <a href="#" class="menu-item" id="laporan-menu">
+                    <i class="fas fa-chart-bar"></i> 
+                    <span>Laporan</span>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+                <ul class="submenu" id="laporan-submenu">
+                    <li><a href="laporan_transaksi.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> <span>Laporan Transaksi</span></a></li>
+                    <li><a href="laporan_stok.html" class="menu-item"><i class="fas fa-boxes"></i> <span>Laporan Stok</span></a></li>
+                </ul>
+            </li>
+            
+            <li class="menu-section">Akun</li>
+            <li><a href="#" class="menu-item" id="logout"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="page-title">Dashboard</h1>
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div style="font-weight: 600;" id="user">Hi</div>
+                    <div style="font-size: 12px; color: #6c757d;">Administrator</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cards Container -->
+        <div class="cards-container">
+            <!-- Card 1: Penukaran Sampah Terbanyak (Bar Chart Grup) -->
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-chart-bar"></i> Penukaran Sampah per Kelas</h3>
+                <div class="chart-container">
+                    <canvas id="barChart" class="chart-wrapper"></canvas>
+                </div>
+                <div class="chart-legend" id="barChartLegend">
+                </div>
+            </div>
+            
+            <!-- Card 2: Jenis Sampah Terbanyak (Pie Chart) -->
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-chart-pie"></i>Input Jenis Sampah Terbanyak</h3>
+                <div class="chart-container">
+                    <canvas id="pieChart" class="chart-wrapper"></canvas>
+                </div>
+                <div class="chart-legend" id="pieChartLegend">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Table: Transaksi Terbaru -->
+        <div class="table-container-dashboard">
+            <h3 class="table-title"><i class="fas fa-history"></i> Transaksi Terbaru</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>ID Transaksi</th>
+                        <th>Jenis Transaksi</th>
+                        <th>Jenis Sampah</th>
+                        <th>Berat</th>
+                        <th>Total Transaksi</th>
+                    </tr>
+                </thead>
+                <tbody id="transaksi-table-body">
+                    <!-- <tr>
+                        <td>1</td>
+                        <td>231105</td>
+                        <td><span class="badge badge-plastik">Plastik</span></td>
+                        <td class="currency">Rp 20.000,00</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>244231</td>
+                        <td><span class="badge badge-kaleng">Kaleng</span></td>
+                        <td class="currency">Rp 15.000,00</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>235222</td>
+                        <td><span class="badge badge-kardus">Kardus</span></td>
+                        <td class="currency">Rp 10.000,00</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>223115</td>
+                        <td><span class="badge badge-plastik">Plastik</span></td>
+                        <td class="currency">Rp 5.000,00</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>223114</td>
+                        <td><span class="badge badge-plastik">Plastik</span></td>
+                        <td class="currency">Rp 10.000,00</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>223120</td>
+                        <td><span class="badge badge-plastik">Plastik</span></td>
+                        <td class="currency">Rp 20.000,00</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>223121</td>
+                        <td><span class="badge badge-plastik">Plastik</span></td>
+                        <td class="currency">Rp 15.000,00</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>223123</td>
+                        <td><span class="badge badge-kaleng">Kaleng</span></td>
+                        <td class="currency">Rp 10.000,00</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>223101</td>
+                        <td><span class="badge badge-kardus">Kardus</span></td>
+                        <td class="currency">Rp 5.000,00</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>214116</td>
+                        <td><span class="badge badge-kertas">Kertas</span></td>
+                        <td class="currency">Rp 10.000,00</td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Overlay untuk modal (DI BAWAH MODAL) -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+    
+    <!-- Modal Konfirmasi Logout (DI ATAS OVERLAY) -->
+    <div class="logout-modal" id="logout-modal">
+        <div class="modal-icon">
+            <img src="./img/icon_logout.png" width="100" height="100">
+        </div>
+        <p class="modal-message">Apakah Anda yakin ingin keluar?</p>
+        <div class="modal-buttons">
+            <button class="modal-btn-logout cancel" id="cancel-logout">Tidak</button>
+            <button class="modal-btn-logout confirm" id="confirm-logout">Ya</button>
+        </div>
+    </div>
+
+    <script>
+        const logoContainer = document.getElementById('logo-container');
+        const menuItems = document.querySelectorAll('.menu-item');
+        const laporanMenu = document.getElementById('laporan-menu');
+        const laporanSubmenu = document.getElementById('laporan-submenu');
+        const hasSubmenu = laporanMenu ? laporanMenu.closest('.has-submenu') : null;
+        const logoutContainer = document.getElementById('logout');
+        const logoutModal = document.getElementById('logout-modal');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const cancelLogoutBtn = document.getElementById('cancel-logout');
+        const confirmLogoutBtn = document.getElementById('confirm-logout');
+        const transaksiTableBody = document.getElementById('transaksi-table-body');
+        const pieChartBody = document.getElementById('pieChartLegend');
+        const barChartBody = document.getElementById('barChartLegend');
+        
+        let isLogin = false;
+        let storedLoginData;
+        let transaksiData = [];
+        let sampahData = [];
+        let dataSummary = {};
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginData();
+
+            if (isLogin) {
+                fetchJenisSampahData();
+                setupEventListeners();
+            }
+        });
+
+        function checkLoginData() {
+            // Retrieve the value using the same key 'loginData'
+            storedLoginData = JSON.parse(localStorage.getItem('loginData'));
+
+            if (storedLoginData == null) {
+                window.location.replace('./login.html');
+            } else {
+                isLogin = true;
+                document.getElementById("user").textContent = `Hi, ${storedLoginData.nama}`;
+            }
+        }
+
+        async function fetchJenisSampahData() {
+            try {
+                const response = await fetch('http://localhost:3000/sampah');
+                console.log('response', response);
+
+				const result = await response.json();
+				console.log('result', result);
+
+                sampahData = result.data || [];
+                console.log('data', sampahData);
+
+                fetchData();
+            } catch (error) {
+                console.error('Error during fetch data:', error);
+        		alert('An error occurred. Please try again later.');
+            }
+        }
+
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/laporan/transaksi/latest');
+                console.log('response', response);
+
+                const result = await response.json();
+                console.log('result', result);
+
+                transaksiData = result.data || [];
+                console.log('data', transaksiData);
+
+                generateDataSummary();
+
+                // Create Bar Chart for "Penukaran Sampah per Kelas"
+                createBarChart();
+
+                // Create Pie Chart for "Jenis Sampah Terbanyak"
+                createPieChart();
+
+                renderTable();
+            } catch (error) {
+                console.error('Error during fetch data:', error);
+                alert('An error occurred. Please try again later.');
+            }
+        }
+
+        // Format angka menjadi format Rupiah
+        function formatRupiah(angka) {
+            if (!angka) return '';
+            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Function to generate a random hex color code
+        function generateRandomHexColor() {
+            // Generate a random number up to 0xFFFFFF (16777215)
+            let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            
+            // Pad the result with leading zeros if necessary to ensure it's 6 digits long
+            randomColor = "#" + randomColor.padStart(6, '0');
+            
+            return randomColor;
+        }
+
+        function generateDataSummary() {
+            for (let x in sampahData) {
+                dataSummary[sampahData[x].jenisSampahID] = {
+                    id: sampahData[x].jenisSampahID,
+                    namaJenis: sampahData[x].namaJenis,
+                    totalBeratInput: 0,
+                    totalBeratOutput: 0,
+                    color: generateRandomHexColor(),
+                    detail: {}
+                };
+
+                let kelasDetail = {};
+
+                for (let y = 0; y < 6; y++) {
+                    kelasDetail[y+1] = {
+                        kelas: "Kelas " + Number(y + 1),
+                        subTotalBerat: 0
+                    };
+                }
+
+                dataSummary[sampahData[x].jenisSampahID].detail = kelasDetail;
+            }
+
+            for (let x in transaksiData) {
+                if (dataSummary.hasOwnProperty(transaksiData[x].jenisSampahID)) {
+                    if (transaksiData[x].tipeTransaksi === "INPUT") {
+                        dataSummary[transaksiData[x].jenisSampahID].totalBeratInput += Number(transaksiData[x].berat);
+
+                        if (dataSummary[transaksiData[x].jenisSampahID].detail.hasOwnProperty(transaksiData[x].kelas)) {
+                            dataSummary[transaksiData[x].jenisSampahID].detail[transaksiData[x].kelas].subTotalBerat += Number(transaksiData[x].berat);
+                        }
+                    } else {
+                        dataSummary[transaksiData[x].jenisSampahID].totalBeratOutput += Number(transaksiData[x].berat);
+                    }
+                }
+            }
+
+            console.log(dataSummary);
+        }
+
+        function createBarChart() {
+            const ctx = document.getElementById('barChart').getContext('2d');
+            
+            // Data untuk 6 kelas
+            const labels = ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6'];
+
+            let chartData = [];
+
+            for (let x in dataSummary) {
+                let dataSet = {
+                    label: dataSummary[x].namaJenis,
+                    data: [],
+                    backgroundColor: dataSummary[x].color,
+                    borderColor: '#217AF0',
+                    borderWidth: 1,
+                    barPercentage: 0.8,
+                    categoryPercentage: 0.7
+                }
+
+                for (let y in dataSummary[x].detail) {
+                    dataSet.data.push(dataSummary[x].detail[y].subTotalBerat);
+                }
+
+                chartData.push(dataSet);
+            }
+            
+            const barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: chartData,
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // custom legend
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw} Kg`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + ' kg';
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Berat (kg)',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Kelas',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Clear bar body
+            barChartBody.innerHTML = '';
+            
+            // Add element
+            for (let x in dataSummary) {
+                let element = "";
+                
+                element = `
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color:${dataSummary[x].color};" ></span>
+                        <span class="legend-label">${dataSummary[x].namaJenis}</span>
+                    </div>
+                `;
+                
+                barChartBody.insertAdjacentHTML('beforeend', element);
+            }
+        }
+
+        function createPieChart() {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+
+            let chartLabel = [];
+            let chartData = [];
+            let chartColor = [];
+            let totalBeratInput = 0;
+
+            for (let x in dataSummary) {
+                chartLabel.push(dataSummary[x].namaJenis);
+                chartData.push(dataSummary[x].totalBeratInput);
+                chartColor.push(dataSummary[x].color);
+
+                totalBeratInput += dataSummary[x].totalBeratInput;
+            }
+            
+            // Data untuk pie chart (dalam persentase)
+            const pieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: chartLabel,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: chartColor,
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // Sembunyikan legend default
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let berat = context.raw;
+                                    let percentage = parseFloat(berat/totalBeratInput).toFixed(4) * 100;
+
+                                    return `${context.label}: ${percentage}% (${berat} Kg)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Clear pie body
+            pieChartBody.innerHTML = '';
+            
+            // Add element
+            for (let x in dataSummary) {
+                let element = "";
+                
+                element = `
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color:${dataSummary[x].color};" ></span>
+                        <span class="legend-label">${dataSummary[x].namaJenis}</span>
+                    </div>
+                `;
+                
+                pieChartBody.insertAdjacentHTML('beforeend', element);
+            }
+        }
+
+        // Render tabel dengan data transaksi
+        function renderTable() {
+            // Clear table body
+            transaksiTableBody.innerHTML = '';
+            
+            // Add rows to table
+            transaksiData.forEach((transaksi, index) => {
+                // limit to 10 rows
+                if (index < 10) {
+                    const rowNumber = index + 1;
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${rowNumber}.</td>
+                        <td>${transaksi.tanggal}</td>
+                        <td>${transaksi.transaksiID}</td>
+                        <td>${transaksi.tipeTransaksi}</td>
+                        <td><span style="color:${dataSummary[transaksi.jenisSampahID].color}" class="badge">${transaksi.namaJenis}</td>
+                        <td>${transaksi.berat}</td>
+                        <td class="currency">${formatRupiah(transaksi.subtotal)}</td>
+                    `;
+                    
+                    transaksiTableBody.appendChild(row);
+                }
+            });
+        }
+
+        // Fungsi untuk menampilkan modal logout
+        function showLogoutModal() {
+            logoutModal.classList.add('show');
+            modalOverlay.classList.add('show');
+            // Blokir scroll body saat modal terbuka
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fungsi untuk menyembunyikan modal logout
+        function hideLogoutModal() {
+            logoutModal.classList.remove('show');
+            modalOverlay.classList.remove('show');
+            // Kembalikan scroll body
+            document.body.style.overflow = 'auto';
+        }
+
+        // Setup event listeners
+		function setupEventListeners() {
+            // Add click event listener to logo container for dashboard navigation
+            if (logoContainer) {
+                logoContainer.addEventListener('click', function() {
+                    window.location.href = 'dashboard.html';
+                });
+            }
+
+            // Handle click on all menu items
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Skip if this is the Laporan menu 
+                    if (this.id === 'laporan-menu') {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Remove active class from ALL menu items
+                    menuItems.forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // If clicking on a submenu item, keep the submenu open
+                    if (this.closest('.submenu')) {
+                        // Ensure the parent submenu is open
+                        const parentSubmenu = this.closest('.submenu');
+                        const parentHasSubmenu = this.closest('.has-submenu');
+                        
+                        if (parentSubmenu && !parentSubmenu.classList.contains('show')) {
+                            parentSubmenu.classList.add('show');
+                            parentHasSubmenu.classList.add('active');
+                        }
+                    } else {
+                        // If clicking on a non-submenu item, close all submenus
+                        const allSubmenus = document.querySelectorAll('.submenu.show');
+                        allSubmenus.forEach(submenu => {
+                            submenu.classList.remove('show');
+                            submenu.closest('.has-submenu').classList.remove('active');
+                        });
+                    }
+                });
+            });
+
+            // Handle Laporan menu click (toggle submenu)
+            laporanMenu.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Toggle submenu visibility
+                laporanSubmenu.classList.toggle('show');
+                hasSubmenu.classList.toggle('active');
+                
+                // Close other submenus if any
+                const otherSubmenus = document.querySelectorAll('.submenu.show');
+                otherSubmenus.forEach(submenu => {
+                    if (submenu !== laporanSubmenu) {
+                        submenu.classList.remove('show');
+                        submenu.closest('.has-submenu').classList.remove('active');
+                    }
+                });
+            });
+
+            logoutContainer.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                showLogoutModal();
+            });
+
+            // Event listener untuk tombol cancel logout
+            cancelLogoutBtn.addEventListener('click', function() {
+                hideLogoutModal();
+            });
+            
+            // Event listener untuk tombol confirm logout
+            confirmLogoutBtn.addEventListener('click', function() {
+                localStorage.clear();
+                window.location.replace('./login.html');
+            });
+            
+            // Event listener untuk overlay modal
+            modalOverlay.addEventListener('click', function() {
+                hideLogoutModal();
+            });
+
+            // Close submenu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.has-submenu') && !e.target.closest('.submenu')) {
+                    laporanSubmenu.classList.remove('show');
+                    hasSubmenu.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
