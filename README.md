@@ -73,38 +73,38 @@ Karena selama aplikasi berjalan, data yang diinput akan terupdate otomatis pada 
    - status: aktif
    - simpan
    Klik edit, jika terjadi kekeliruan dalam mengisi data
-4. Tambahkan data pengepul pada Kelola Pengepul dengan:
+3. Tambahkan data pengepul pada Kelola Pengepul dengan:
    - mengisi nama pengepul
    - mengisi nomor telepon
    - status: aktif
    - simpan
    Klik edit, jika terjadi kekeliruan dalam mengisi data
-5. Tambahkan data jenis sampah pada Kelola Jenis Sampah dengan:
+4. Tambahkan data jenis sampah pada Kelola Jenis Sampah dengan:
    - mengisi nama jenis sampah
    - masukkan data stok awal
    - masukkan harga sampah (untuk harga pada Transaksi Input)
    - status: aktif 
    - simpan
    Klik edit, jika terjadi kekeliruan dalam mengisi data
-6. Pada Transaksi Input:
+5. Pada Transaksi Input:
    - pilih ID Customer
    - input berat
    - simpan
    - muncul struk dan kupon hasil transaksi
    - cetak struk dan kupon
-7. Pada Transaksi Output:
+6. Pada Transaksi Output:
    - pilih ID Pengepul
    - input berat dan harga jual (berubah-ubah)
    - simpan
-8. Klik Dashboard untuk menampilkan ringkasan transaksi secara real-time
-9. Lihat Laporan Transaksi:
+7. Klik Dashboard untuk menampilkan ringkasan transaksi secara real-time
+8. Lihat Laporan Transaksi:
    - lihat laporan transaksi
    - lakukan pencarian berdasarkan keyword ID Transaksi, ID Customer, atau jenis sampah (jika diperlukan)
    - lakukan filter berdasarkan tanggal/bulan/tahun (jika diperlukan)
    - cetak laporan
-10. Lihat Laporan Stok:
+9. Lihat Laporan Stok:
    - lihat laporan stok
    - lakukan filter berdasarkan bulan dan tahun, klik tampilkan (jika diperlukan)
    - reset jika ingin melihat bulan dan tahun lain
    - cetak laporan
-11. Klik logout untuk keluar dari sesi aplikasi
+10. Klik logout untuk keluar dari sesi aplikasi
