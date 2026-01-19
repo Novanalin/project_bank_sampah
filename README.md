@@ -41,7 +41,7 @@ Sistem ini membantu pencatatan transaksi setoran dan penjualan sampah secara dig
 1. Buat folder yang memuat backend dan frontend secara terpisah
 2. Buat file docker-compose.yml dan simpan di folder backend
 3. Buka aplikasi Docker Desktop dan sign in
-4. Buka command prompt, ketikkan lokasi folder backend
+4. Buka command prompt, ketik cd dan masukkan lokasi folder backend
 5. Ketik npm install untuk install node module
 6. Sinkronisasi dengan Docker dengan ketik: docker-compose up -d
 7. Tunggu phpMyAdmin dan MySQL selesai pulled
@@ -56,7 +56,7 @@ Sistem ini membantu pencatatan transaksi setoran dan penjualan sampah secara dig
 
 # Cara Login untuk user:
 1. Buka aplikasi Docker Desktop dan sign in
-2. Buka command prompt, ketikkan lokasi folder backend
+2. Buka command prompt, ketik cd lalu masukkan lokasi folder backend
 3. Ketik node index.js
 4. Buka folder frontend, klik login
 5. Masukkan username: admin1 dan password: 1234
